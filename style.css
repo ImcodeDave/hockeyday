@@ -1166,3 +1166,14 @@ dialog > img {
     font-size: 19px;
   }
 }
+
+@media (hover: hover) and (pointer: fine) {
+  a,
+  button,
+  summary,
+  [role="button"] {
+    cursor:
+      url("assets/puck-cursor.svg") 16 14,
+      pointer;
+  }
+}
