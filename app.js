@@ -1,5 +1,60 @@
-const events={friday:[['16:00','NHL Global Fan Tour','Zahájení akce a fanouškovský program','Pernštýnské náměstí','Vstup zdarma']],saturday:[['12:00','NHL Global Fan Tour','Start sobotního programu ve fanzóně','Pernštýnské náměstí','Vstup zdarma'],['13:30','Autogramiáda hráčů','Setkání s hokejovými legendami','enteria arena',''],['15:30','Dynamo legendy vs. NHL legendy','Exhibiční utkání','enteria arena','Exhibice'],['18:10','Živé studio Nova Sport','Hokejové studio přímo na náměstí','Pernštýnské náměstí','Vstup zdarma'],['18:30','Washington Capitals vs. Boston Bruins','Společná projekce zápasu NHL','Pernštýnské náměstí','Vstup zdarma'],['18:45','Focení se Stanley Cupem','Veřejné focení s ikonickou trofejí','Pernštýnské náměstí','Vstup zdarma']]};
-function renderSchedule(day){document.querySelectorAll('[data-day]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.day===day)));const panel=document.getElementById('schedule');panel.setAttribute('aria-labelledby','tab-'+day);panel.innerHTML=events[day].map(([time,title,desc,venue,pill])=>`<article class="schedule-row ${time==='15:30'?'featured':''}"><time>${time}</time><div><h3>${title}</h3><p>${desc}</p></div><div class="venue">${venue}${pill?`<br><span class="pill">${pill}</span>`:''}</div></article>`).join('')}
-document.querySelectorAll('[data-day]').forEach(b=>{b.addEventListener('click',()=>renderSchedule(b.dataset.day));b.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();const next=b.dataset.day==='friday'?'saturday':'friday';renderSchedule(next);document.getElementById('tab-'+next).focus()}})});renderSchedule('saturday');
-const menu=document.querySelector('.menu');menu.addEventListener('click',()=>{const open=document.querySelector('header').classList.toggle('menu-open');menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Zavřít menu':'Otevřít menu');menu.textContent=open?'✕':'☰'});document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>{document.querySelector('header').classList.remove('menu-open');menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Otevřít menu');menu.textContent='☰'}));
-const dialog=document.getElementById('lightbox'),photos=[...document.querySelectorAll('.gallery-item')];let selected=0;function showPhoto(index){selected=(index+photos.length)%photos.length;const item=photos[selected];dialog.querySelector('img').src=item.dataset.image;dialog.querySelector('img').alt=item.querySelector('img').alt;dialog.querySelector('p').textContent=item.dataset.caption+' · '+(selected+1)+' / '+photos.length}photos.forEach((b,i)=>b.addEventListener('click',()=>{showPhoto(i);dialog.showModal();document.body.style.overflow='hidden'}));function closeGallery(){dialog.close()}dialog.querySelector('.close-dialog').addEventListener('click',closeGallery);dialog.addEventListener('close',()=>document.body.style.overflow='');dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeGallery()}});document.getElementById('prev-image').addEventListener('click',()=>showPhoto(selected-1));document.getElementById('next-image').addEventListener('click',()=>showPhoto(selected+1));dialog.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')showPhoto(selected-1);if(e.key==='ArrowRight')showPhoto(selected+1)});
+const menu = document.querySelector(".menu");
+menu.addEventListener("click", () => {
+  const open = document.querySelector("header").classList.toggle("menu-open");
+  menu.setAttribute("aria-expanded", String(open));
+  menu.setAttribute("aria-label", open ? "Zavřít menu" : "Otevřít menu");
+  menu.textContent = open ? "✕" : "☰";
+});
+document.querySelectorAll("nav a").forEach((a) =>
+  a.addEventListener("click", () => {
+    document.querySelector("header").classList.remove("menu-open");
+    menu.setAttribute("aria-expanded", "false");
+    menu.setAttribute("aria-label", "Otevřít menu");
+    menu.textContent = "☰";
+  }),
+);
+const dialog = document.getElementById("lightbox"),
+  photos = [...document.querySelectorAll(".gallery-item")];
+let selected = 0;
+function showPhoto(index) {
+  selected = (index + photos.length) % photos.length;
+  const item = photos[selected];
+  dialog.querySelector("img").src = item.dataset.image;
+  dialog.querySelector("img").alt = item.querySelector("img").alt;
+  dialog.querySelector("p").textContent =
+    item.dataset.caption + " · " + (selected + 1) + " / " + photos.length;
+}
+photos.forEach((b, i) =>
+  b.addEventListener("click", () => {
+    showPhoto(i);
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+  }),
+);
+function closeGallery() {
+  dialog.close();
+}
+dialog.querySelector(".close-dialog").addEventListener("click", closeGallery);
+dialog.addEventListener("close", () => (document.body.style.overflow = ""));
+dialog.addEventListener("click", (e) => {
+  if (e.target === dialog) {
+    const r = dialog.getBoundingClientRect();
+    if (
+      e.clientX < r.left ||
+      e.clientX > r.right ||
+      e.clientY < r.top ||
+      e.clientY > r.bottom
+    )
+      closeGallery();
+  }
+});
+document
+  .getElementById("prev-image")
+  .addEventListener("click", () => showPhoto(selected - 1));
+document
+  .getElementById("next-image")
+  .addEventListener("click", () => showPhoto(selected + 1));
+dialog.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") showPhoto(selected - 1);
+  if (e.key === "ArrowRight") showPhoto(selected + 1);
+});
